@@ -23,7 +23,7 @@ import com.lacavedeharol.chess.model.GameStatus;
 import com.lacavedeharol.chess.model.MoveResult;
 import com.lacavedeharol.chess.model.PieceType;
 import com.lacavedeharol.chess.view.ChessRenderer;
-import com.lacavedeharol.chess.view.PromotionDialog;
+import com.lacavedeharol.chess.view.components.PromotionDialog;
 
 /**
  * The Controller. Translates user input (mouse clicks/drags) into actions for
@@ -41,8 +41,6 @@ public class ChessRendererListeners implements MouseListener, MouseMotionListene
     private int fromFile, fromRank;
     private List<Point> legalMoves;
 
-    private Map<String, ImageIcon> promotionIcons;
-
     public ChessRendererListeners(GameState gameState, ChessRenderer chessRenderer, SimpleAI ai) {
         this.gameState = gameState;
         this.chessRenderer = chessRenderer;
@@ -50,11 +48,7 @@ public class ChessRendererListeners implements MouseListener, MouseMotionListene
         this.isTwoPlayerMode = (ai == null);
         this.chessRenderer.addMouseListener(this);
         this.chessRenderer.addMouseMotionListener(this);
-
         this.legalMoves = new ArrayList<>();
-
-        createPromotionIcons();
-
     }
 
     public void startGame() {
@@ -171,20 +165,10 @@ public class ChessRendererListeners implements MouseListener, MouseMotionListene
      * @param rank
      */
     private void handlePromotion(int file, int rank) {
-        // We need to know if the pawn is white to show the correct colored icons.
+
         boolean isWhite = (rank == 0);
 
-        Map<String, ImageIcon> iconsForDialog = new HashMap<>();
-
-        PieceType[] pieces = { PieceType.QUEEN, PieceType.ROOK, PieceType.BISHOP, PieceType.KNIGHT };
-        String colorKey = isWhite ? "_WHITE" : "_BLACK";
-        for (PieceType piece : pieces) {
-            iconsForDialog.put(piece.name() + colorKey, promotionIcons.get(piece.name() + colorKey));
-        }
-
-        // Create and show the custom dialog.
-        PromotionDialog dialog = new PromotionDialog((JFrame) SwingUtilities.getWindowAncestor(chessRenderer),
-                iconsForDialog);
+        PromotionDialog dialog = new PromotionDialog((JFrame) SwingUtilities.getWindowAncestor(chessRenderer), isWhite);
         dialog.setVisible(true);
 
         PieceType selectedPieceType = dialog.getSelectedPiece();
@@ -229,28 +213,6 @@ public class ChessRendererListeners implements MouseListener, MouseMotionListene
         chessRenderer.removeMouseMotionListener(this);
 
         return true; // Game is over.
-    }
-
-    private void createPromotionIcons() {
-        promotionIcons = new HashMap<>();
-        BufferedImage spriteSheet = ChessPiece.getSpriteSheet();
-        int spriteSize = 16;
-
-        PieceType[] pieceTypes = { PieceType.QUEEN, PieceType.ROOK, PieceType.BISHOP, PieceType.KNIGHT };
-        int[] pieceXCoords = { 4, 3, 1, 2 }; // Queen, Rook, Bishop, Knight
-
-        for (int i = 0; i < pieceTypes.length; i++) {
-            PieceType type = pieceTypes[i];
-            int x = pieceXCoords[i] * spriteSize;
-
-            // White pieces (top row).
-            BufferedImage whiteSprite = spriteSheet.getSubimage(x, 0, spriteSize, spriteSize * 2);
-            promotionIcons.put(type.name() + "_WHITE", new ImageIcon(whiteSprite));
-
-            // Black pieces (third row).
-            BufferedImage blackSprite = spriteSheet.getSubimage(x, spriteSize * 2, spriteSize, spriteSize * 2);
-            promotionIcons.put(type.name() + "_BLACK", new ImageIcon(blackSprite));
-        }
     }
 
     /**

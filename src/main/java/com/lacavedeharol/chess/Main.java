@@ -13,8 +13,8 @@ public class Main {
         SwingUtilities.invokeLater(() -> {
             GameState gameState = new GameState();
             ChessRenderer chessRenderer = new ChessRenderer(gameState);
-            SimpleAI ai = new SimpleAI(false);
-            ChessRendererListeners controller = new ChessRendererListeners(gameState, chessRenderer, null);
+            ChessRendererListeners controller = new ChessRendererListeners(gameState, chessRenderer,
+                    null);// new SimpleAI(false)
 
             new MainFrame(chessRenderer);
 

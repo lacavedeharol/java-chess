@@ -55,7 +55,7 @@ public class ChessRenderer extends JPanel implements ComponentListener {
         optionsMenu.addSeparator();
         optionsMenu.add(quitItem);
 
-        JButton optionsButton = new JButton("gearIcon");
+        JButton optionsButton = new JButton("gear-icon");
         styleMenuButton(optionsButton);
 
         JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -99,7 +99,7 @@ public class ChessRenderer extends JPanel implements ComponentListener {
                 RenderingHints.KEY_RENDERING,
                 RenderingHints.VALUE_RENDER_QUALITY);
 
-        g2d.setColor(Color.decode("#846964"));
+        g2d.setColor(Color.decode("#241112"));
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
         // debug print

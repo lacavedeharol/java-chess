@@ -11,12 +11,14 @@ import javax.imageio.ImageIO;
  */
 public class ChessPiece {
 
-    private static BufferedImage chessPiecesSpriteSheet, chessPieceShadow;
+    private static BufferedImage chessPiecesSpriteSheet, chessPieceShadow, promotionIconsSpriteSheet;
 
     static {
         try {
             chessPiecesSpriteSheet = ImageIO.read(ChessPiece.class.getResourceAsStream("/images/chessPieces.png"));
             chessPieceShadow = ImageIO.read(ChessPiece.class.getResourceAsStream("/images/chessPieceShadow.png"));
+            promotionIconsSpriteSheet = ImageIO
+                    .read(ChessPiece.class.getResourceAsStream("/images/promotionPieceChooser.png"));
         } catch (IOException ex) {
         }
     }
@@ -61,6 +63,10 @@ public class ChessPiece {
 
     public static BufferedImage getPieceShadow() {
         return chessPieceShadow;
+    }
+
+    public static BufferedImage getPromotionIconsSpriteSheet() {
+        return promotionIconsSpriteSheet;
     }
 
     public void setPosition(int file, int rank) {
