@@ -1,0 +1,8 @@
+# Ignore 
+*
+
+# Allow 
+!src/
+!src/**
+!pom.xml
+!.gitignore
