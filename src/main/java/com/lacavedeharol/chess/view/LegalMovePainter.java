@@ -20,7 +20,7 @@ public class LegalMovePainter {
 
     private void loadSprite() {
         try {
-            markerSprite = ImageIO.read(getClass().getResourceAsStream("/images/legalMoveMarker.png"));
+            markerSprite = ImageIO.read(getClass().getResourceAsStream("/images/legal_move_marker.png"));
         } catch (IOException e) {
         }
     }

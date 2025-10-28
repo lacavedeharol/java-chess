@@ -16,9 +16,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>java-chess-project</name>
-    <description>
-                A chess game in a pixel art style that is intended for either local players or computer opponents.
-            </description>
+    <description>A chess game in a pixel art style that is intended for either local players or computer opponents.</description>
     <url />
 
     <properties>

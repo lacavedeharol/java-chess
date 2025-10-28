@@ -13,7 +13,7 @@ public class BorderPainter {
         private static BufferedImage boardBorder; //
 
         static {
-                try (InputStream is = ChessBoard.class.getResourceAsStream("/images/chessBoardBorder.png")) {
+                try (InputStream is = ChessBoard.class.getResourceAsStream("/images/chess_board_border.png")) {
                         boardBorder = ImageIO.read(is);
                 } catch (IOException ex) {
                 }
@@ -21,7 +21,7 @@ public class BorderPainter {
 
         public void draw(Graphics2D g2d, int boardSquareLength) {
 
-                 g2d.translate(boardSquareLength, boardSquareLength);
+                g2d.translate(boardSquareLength, boardSquareLength);
                 for (int x = 1; x < 9; x++) {
                         g2d.drawImage(boardBorder.getSubimage(16, 0, SPRITE_SIZE, SPRITE_SIZE),
                                         x * boardSquareLength,
@@ -58,7 +58,7 @@ public class BorderPainter {
                                         9 * boardSquareLength,
                                         boardSquareLength, boardSquareLength, null);
                 }
-                 g2d.translate(-boardSquareLength, -boardSquareLength);
+                g2d.translate(-boardSquareLength, -boardSquareLength);
 
         }
 }

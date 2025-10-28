@@ -35,7 +35,7 @@ public class CheckIndicatorPainter {
 
     private void loadSprite() {
         try {
-            checkIndicatorSprite = ImageIO.read(getClass().getResourceAsStream("/images/checkIndicator.png"));
+            checkIndicatorSprite = ImageIO.read(getClass().getResourceAsStream("/images/check_indicator.png"));
         } catch (IOException e) {
         }
     }
@@ -49,14 +49,14 @@ public class CheckIndicatorPainter {
                 yOffset += ANIMATION_SPEED;
                 if (yOffset >= MAX_OFFSET) {
                     yOffset = MAX_OFFSET;
-                    isMovingUp = false; 
+                    isMovingUp = false;
                 }
             } else {
                 yOffset -= ANIMATION_SPEED;
                 if (yOffset <= 0) {
                     yOffset = 0;
-                    isMovingUp = true; 
-                    bounceCount++; 
+                    isMovingUp = true;
+                    bounceCount++;
                 }
             }
 
@@ -71,6 +71,9 @@ public class CheckIndicatorPainter {
 
     /**
      * Draws the check indicator over the king if it's in check.
+     * 
+     * @param g2d
+     * @param boardSquareSize
      */
     public void draw(Graphics2D g2d, int boardSquareSize) {
         boolean isNewWhiteCheck = gameState.isWhiteKingInCheck() && !wasWhiteInCheck;

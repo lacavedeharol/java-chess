@@ -9,7 +9,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PromotionButton extends JComponent implements MouseListener {
+public class ChessButton extends JComponent implements MouseListener {
 
     private Image image;
     private PieceType pieceType;
@@ -17,7 +17,7 @@ public class PromotionButton extends JComponent implements MouseListener {
 
     private List<ActionListener> actionListeners = new ArrayList<>();
 
-    public PromotionButton(Image image, PieceType pieceType) {
+    public ChessButton(Image image, PieceType pieceType) {
         this.image = image;
         this.pieceType = pieceType;
         setCursor(new Cursor(Cursor.HAND_CURSOR));

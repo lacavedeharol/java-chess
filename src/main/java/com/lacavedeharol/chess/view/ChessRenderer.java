@@ -28,20 +28,21 @@ import com.lacavedeharol.chess.model.PieceType;
 public class ChessRenderer extends JPanel implements ComponentListener {
 
     private static final int SPRITE_SIZE = 16;
-    private int boardSquareLength = 64;
+    private int boardSquareLength = 32;
     private final GameState gameState;
     private final ChessBoard chessBoard;
     private final BorderPainter borderPainter;
-    // private final CheckIndicatorPainter checkIndicatorPainter;
+    private final CheckIndicatorPainter checkIndicatorPainter;
     private final LegalMovePainter legalMovePainter;
     private ChessPiece draggedPiece;
     private int draggedFile, draggedRank;
 
     public ChessRenderer(GameState gameState) {
+
         this.gameState = gameState;
         this.chessBoard = new ChessBoard();
         this.borderPainter = new BorderPainter();
-        // this.checkIndicatorPainter = new CheckIndicatorPainter(gameState, this);
+        this.checkIndicatorPainter = new CheckIndicatorPainter(gameState, this);
         this.legalMovePainter = new LegalMovePainter();
         this.addComponentListener(this);
 
@@ -99,20 +100,23 @@ public class ChessRenderer extends JPanel implements ComponentListener {
                 RenderingHints.KEY_RENDERING,
                 RenderingHints.VALUE_RENDER_QUALITY);
 
-        g2d.setColor(Color.decode("#241112"));
+        g2d.setColor(Color.decode("#231e22"));
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
         // debug print
-        g2d.setColor(Color.BLACK);
-        int x = 0;
-        while (x < getWidth()) {
-            int y = 0;
-            while (y < getHeight()) {
-                // g2d.drawRect(x, y, boardSquareLength, boardSquareLength);
-                y += boardSquareLength;
+        boolean grid = false;
+        if (grid) {
+            g2d.setColor(Color.GREEN);
+            int x = 0;
+            while (x < getWidth()) {
+                int y = 0;
+                while (y < getHeight()) {
+                    g2d.drawRect(x, y, boardSquareLength, boardSquareLength);
+                    y += boardSquareLength;
 
+                }
+                x += boardSquareLength;
             }
-            x += boardSquareLength;
         }
         // end of debug print
         borderPainter.draw(g2d, boardSquareLength);

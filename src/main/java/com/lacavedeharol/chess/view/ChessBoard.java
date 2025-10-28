@@ -12,7 +12,7 @@ public class ChessBoard {
     private static BufferedImage boardSquares;
 
     static {
-        try (InputStream is = ChessBoard.class.getResourceAsStream("/images/chessBoardSquares.png")) {
+        try (InputStream is = ChessBoard.class.getResourceAsStream("/images/chess_board_squares.png")) {
             boardSquares = ImageIO.read(is);
         } catch (IOException ex) {
         }
@@ -29,8 +29,6 @@ public class ChessBoard {
                         SPRITE_SIZE);
                 g2d.drawImage(squareImage, file * squareWidth, rank * squareWidth,
                         squareWidth, squareWidth, null);
-                // g2d.drawRect(file * squareWidth, rank * squareHeight, squareWidth,
-                // squareHeight);
             }
         }
     }

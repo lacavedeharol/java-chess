@@ -23,19 +23,16 @@ public class PromotionDialog extends JDialog implements ActionListener {
         super(parent, "Pawn Promotion", true);
         setUndecorated(false);
         setLayout(new GridLayout(1, 4, 0, 0));
-        getContentPane().setBackground(Color.decode("#846964"));
+        getContentPane().setBackground(Color.decode("#a9a499"));
 
         BufferedImage spriteSheet = ChessPiece.getPromotionIconsSpriteSheet();
         int spriteSize = 16;
-        int x = 0;
-        for (String i : "4,3,1,2".split(",")) {
-
-            PromotionButton button = new PromotionButton(
-                    spriteSheet.getSubimage(x * spriteSize, isWhite ? 0 : spriteSize, spriteSize, spriteSize),
-                    PieceType.values()[Integer.valueOf(i)]);
+        for (int i = 0; i < PieceType.values().length - 2; i++) {
+            ChessButton button = new ChessButton(
+                    spriteSheet.getSubimage(i * spriteSize, isWhite ? 0 : spriteSize, spriteSize, spriteSize),
+                    PieceType.values()[i + 1]);
             button.addActionListener(this);
             add(button);
-            x++;
         }
 
         pack();
@@ -55,7 +52,7 @@ public class PromotionDialog extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        PromotionButton button = (PromotionButton) e.getSource();
+        ChessButton button = (ChessButton) e.getSource();
         selectedPiece = button.getPieceType();
         dispose();
     }

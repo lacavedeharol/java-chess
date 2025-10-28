@@ -15,10 +15,10 @@ public class ChessPiece {
 
     static {
         try {
-            chessPiecesSpriteSheet = ImageIO.read(ChessPiece.class.getResourceAsStream("/images/chessPieces.png"));
-            chessPieceShadow = ImageIO.read(ChessPiece.class.getResourceAsStream("/images/chessPieceShadow.png"));
+            chessPiecesSpriteSheet = ImageIO.read(ChessPiece.class.getResourceAsStream("/images/chess_pieces.png"));
+            chessPieceShadow = ImageIO.read(ChessPiece.class.getResourceAsStream("/images/chess_piece_shadow.png"));
             promotionIconsSpriteSheet = ImageIO
-                    .read(ChessPiece.class.getResourceAsStream("/images/promotionPieceChooser.png"));
+                    .read(ChessPiece.class.getResourceAsStream("/images/promotion_piece_chooser.png"));
         } catch (IOException ex) {
         }
     }
