@@ -318,8 +318,8 @@ public class GameState {
 
     private void initializePieces() {
         PieceType[] backRowOrder = {
-                PieceType.ROOK, PieceType.KNIGHT, PieceType.BISHOP, PieceType.QUEEN,
-                PieceType.KING, PieceType.BISHOP, PieceType.KNIGHT, PieceType.ROOK
+                PieceType.ROOK, PieceType.KNIGHT, PieceType.BISHOP,
+                PieceType.KING, PieceType.QUEEN, PieceType.BISHOP, PieceType.KNIGHT, PieceType.ROOK
         };
 
         for (int file = 0; file < 8; file++) {

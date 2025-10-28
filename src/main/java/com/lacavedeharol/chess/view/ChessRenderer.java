@@ -24,6 +24,7 @@ import javax.swing.SwingUtilities;
 import com.lacavedeharol.chess.model.ChessPiece;
 import com.lacavedeharol.chess.model.GameState;
 import com.lacavedeharol.chess.model.PieceType;
+import com.lacavedeharol.chess.view.components.Utilities;
 
 public class ChessRenderer extends JPanel implements ComponentListener {
 
@@ -100,7 +101,7 @@ public class ChessRenderer extends JPanel implements ComponentListener {
                 RenderingHints.KEY_RENDERING,
                 RenderingHints.VALUE_RENDER_QUALITY);
 
-        g2d.setColor(Color.decode("#231e22"));
+        g2d.setColor(Utilities.dark);
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
         // debug print

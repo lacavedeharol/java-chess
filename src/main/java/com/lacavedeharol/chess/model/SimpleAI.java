@@ -30,27 +30,14 @@ public class SimpleAI {
     private int getPieceValue(ChessPiece piece) {
         int value;
         switch (piece.getPieceType()) {
-            case PAWN:
-                value = 10;
-                break;
-            case KNIGHT:
-                value = 30;
-                break;
-            case BISHOP:
-                value = 30;
-                break;
-            case ROOK:
-                value = 50;
-                break;
-            case QUEEN:
-                value = 90;
-                break;
-            case KING:
-                value = 900;
-                break;
-            default:
-                value = 0;
-                break;
+            case PAWN -> value = 10;
+            case KNIGHT -> value = 30;
+            case BISHOP -> value = 30;
+            case ROOK -> value = 50;
+            case QUEEN -> value = 90;
+            case KING -> value = 900;
+            default -> value = 0;
+
         }
         // Return positive for our pieces, negative for the opponent's.
         return piece.isWhite() == this.isWhite ? value : -value;
@@ -68,13 +55,13 @@ public class SimpleAI {
 
         // Get all possible moves.
         List<Point[]> allPossibleMoves = new ArrayList<>();
-        for (int r = 0; r < 8; r++) {
-            for (int f = 0; f < 8; f++) {
-                ChessPiece piece = gameState.getPieceAt(f, r);
+        for (int rank = 0; rank < 8; rank++) {
+            for (int file = 0; file < 8; file++) {
+                ChessPiece piece = gameState.getPieceAt(file, rank);
                 if (piece != null && piece.isWhite() == this.isWhite) {
-                    List<Point> legalMoves = gameState.getLegalMovesForPiece(f, r);
+                    List<Point> legalMoves = gameState.getLegalMovesForPiece(file, rank);
                     for (Point move : legalMoves) {
-                        allPossibleMoves.add(new Point[] { new Point(f, r), move });
+                        allPossibleMoves.add(new Point[] { new Point(file, rank), move });
                     }
                 }
             }
