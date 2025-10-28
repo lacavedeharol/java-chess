@@ -1,4 +1,4 @@
-package com.lacavedeharol.chess.view.components;
+package com.lacavedeharol.chess.view;
 
 import com.lacavedeharol.chess.model.ChessPiece;
 import com.lacavedeharol.chess.model.PieceType;
@@ -24,7 +24,7 @@ public class PromotionDialog extends JDialog implements ActionListener {
         super(parent, "Pawn Promotion", true);
         setUndecorated(false);
         setLayout(new GridLayout(1, 4, 0, 0));
-        getContentPane().setBackground(Utilities.light);
+        getContentPane().setBackground(ArtUtils.light);
 
         BufferedImage spriteSheet = ChessPiece.getPromotionIconsSpriteSheet();
         int spriteSize = 16;

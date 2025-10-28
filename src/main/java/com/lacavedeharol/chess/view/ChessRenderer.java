@@ -1,30 +1,19 @@
 package com.lacavedeharol.chess.view;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 import java.util.Map;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
-
 import com.lacavedeharol.chess.model.ChessPiece;
 import com.lacavedeharol.chess.model.GameState;
 import com.lacavedeharol.chess.model.PieceType;
-import com.lacavedeharol.chess.view.components.Utilities;
 
 public class ChessRenderer extends JPanel implements ComponentListener {
 
@@ -33,75 +22,27 @@ public class ChessRenderer extends JPanel implements ComponentListener {
     private final GameState gameState;
     private final ChessBoard chessBoard;
     private final BorderPainter borderPainter;
-    private final CheckIndicatorPainter checkIndicatorPainter;
     private final LegalMovePainter legalMovePainter;
     private ChessPiece draggedPiece;
     private int draggedFile, draggedRank;
 
-    public ChessRenderer(GameState gameState) {
+    JFrame chessRendererFrame;
 
+    public ChessRenderer(GameState gameState) {
         this.gameState = gameState;
         this.chessBoard = new ChessBoard();
         this.borderPainter = new BorderPainter();
-        this.checkIndicatorPainter = new CheckIndicatorPainter(gameState, this);
         this.legalMovePainter = new LegalMovePainter();
         this.addComponentListener(this);
+        chessRendererFrame = new ChessRendererFrame(this);
 
-        setLayout(new BorderLayout());
-        JPopupMenu optionsMenu = new JPopupMenu();
-        JMenuItem restartItem = new JMenuItem("Restart Game");
-        JMenuItem settingsItem = new JMenuItem("Settings...");
-        JMenuItem quitItem = new JMenuItem("Quit");
-        optionsMenu.add(restartItem);
-        optionsMenu.add(settingsItem);
-        optionsMenu.addSeparator();
-        optionsMenu.add(quitItem);
-
-        JButton optionsButton = new JButton("gear-icon");
-        styleMenuButton(optionsButton);
-
-        JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        headerPanel.setOpaque(false);
-        headerPanel.add(optionsButton);
-
-        this.add(headerPanel, BorderLayout.NORTH);
-
-        optionsButton.addActionListener(e -> {
-            optionsMenu.show(optionsButton, 0, optionsButton.getHeight());
-        });
-
-        restartItem.addActionListener(e -> {
-            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            topFrame.dispose();
-            com.lacavedeharol.chess.Main.main(null);
-        });
-
-        settingsItem.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Settings dialog coming soon!");
-        });
-
-        quitItem.addActionListener(e -> System.exit(0));
-    }
-
-    private void styleMenuButton(JButton button) {
-        button.setBorderPainted(false);
-        button.setContentAreaFilled(false);
-        button.setFocusPainted(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(
-                RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-        g2d.setRenderingHint(
-                RenderingHints.KEY_RENDERING,
-                RenderingHints.VALUE_RENDER_QUALITY);
-
-        g2d.setColor(Utilities.dark);
+        Graphics2D g2d = ArtUtils.preparePixelArtGraphics(g);
+        g2d.setColor(ArtUtils.dark);
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
         // debug print
@@ -120,8 +61,14 @@ public class ChessRenderer extends JPanel implements ComponentListener {
             }
         }
         // end of debug print
+        g2d.translate((chessRendererFrame.getSize().getWidth() - boardSquareLength * 10) / 2,
+                (chessRendererFrame.getSize().getHeight() - boardSquareLength * 10) / 2);
         borderPainter.draw(g2d, boardSquareLength);
-        g2d.translate(boardSquareLength * 2, boardSquareLength * 2);
+        g2d.translate(-(chessRendererFrame.getSize().getWidth() - boardSquareLength * 10) / 2,
+                -(chessRendererFrame.getSize().getHeight() - boardSquareLength * 10) / 2);
+
+        g2d.translate((chessRendererFrame.getSize().getWidth() - boardSquareLength * 8) / 2,
+                (chessRendererFrame.getSize().getHeight() - boardSquareLength * 8) / 2);
 
         chessBoard.draw(g2d, boardSquareLength);
 
@@ -158,7 +105,8 @@ public class ChessRenderer extends JPanel implements ComponentListener {
                 }
             }
         }
-        g2d.translate(-boardSquareLength * 2, -boardSquareLength * 2);
+        g2d.translate(-(chessRendererFrame.getSize().getWidth() - boardSquareLength * 8) / 2,
+                -(chessRendererFrame.getSize().getHeight() - boardSquareLength * 8) / 2);
     }
 
     private void drawPiece(Graphics2D g2d, ChessPiece piece) {
@@ -238,4 +186,21 @@ public class ChessRenderer extends JPanel implements ComponentListener {
     @Override
     public void componentHidden(ComponentEvent e) {
     }
+
+    private class ChessRendererFrame extends JFrame {
+        public ChessRendererFrame(JPanel mainPanel) {
+            add(mainPanel);
+            pack();
+            setMinimumSize(getPreferredSize());
+            setTitle("Java Chess");
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            setLocationRelativeTo(null);
+            setVisible(true);
+        }
+    }
+
+    public JFrame getChessRendererFrame() {
+        return chessRendererFrame;
+    }
+
 }

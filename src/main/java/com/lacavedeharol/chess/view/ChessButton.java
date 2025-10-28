@@ -1,4 +1,4 @@
-package com.lacavedeharol.chess.view.components;
+package com.lacavedeharol.chess.view;
 
 import javax.swing.*;
 
@@ -20,11 +20,13 @@ public class ChessButton extends JComponent implements MouseListener {
 
     public ChessButton(Image image) {
         this.image = image;
+        this.images = null;
         setCursor(new Cursor(Cursor.HAND_CURSOR));
         addMouseListener(this);
     }
 
     public ChessButton(Image[] images, PieceType pieceType) {
+        this.image = null;
         this.images = images;
         this.pieceType = pieceType;
         setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -42,23 +44,21 @@ public class ChessButton extends JComponent implements MouseListener {
             currentImage = pressed ? (currentImage - 1) % images.length : (currentImage + 1) % images.length;
             this.repaint();
         });
-
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(
-                RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-        g2d.setRenderingHint(
-                RenderingHints.KEY_RENDERING,
-                RenderingHints.VALUE_RENDER_QUALITY);
+        Graphics2D g2d = ArtUtils.preparePixelArtGraphics(g);
         g2d.fillRect(0, 0, getWidth(), getHeight());
-        g2d.drawImage(images != null ? images[currentImage] : image, pressed ? 2 : 0, pressed ? 2 : 0,
-                pressed ? 60 : 64, pressed ? 60 : 64,
-                null);
+
+        try {
+            g2d.drawImage(images != null ? images[currentImage] : image, pressed ? 2 : 0, pressed ? 2 : 0,
+                    pressed ? 60 : 64, pressed ? 60 : 64,
+                    null);
+        } catch (IllegalArgumentException iae) {
+        }
+
     }
 
     @Override
@@ -87,8 +87,8 @@ public class ChessButton extends JComponent implements MouseListener {
     @Override
     public void mouseEntered(MouseEvent e) {
         if (pressed) {
+            currentImage = 0;
             animationTimer.stop();
-            currentImage = currentImage >= 0 ? currentImage-- : 0;
             this.repaint();
         } else {
             animationTimer.start();

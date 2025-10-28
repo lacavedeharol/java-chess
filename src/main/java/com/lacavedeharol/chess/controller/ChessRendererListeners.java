@@ -18,7 +18,7 @@ import com.lacavedeharol.chess.model.GameStatus;
 import com.lacavedeharol.chess.model.MoveResult;
 import com.lacavedeharol.chess.model.PieceType;
 import com.lacavedeharol.chess.view.ChessRenderer;
-import com.lacavedeharol.chess.view.components.PromotionDialog;
+import com.lacavedeharol.chess.view.PromotionDialog;
 
 /**
  * The Controller. Translates user input (mouse clicks/drags) into actions for
@@ -29,13 +29,19 @@ public class ChessRendererListeners implements MouseListener, MouseMotionListene
 
     private final GameState gameState;
     private final ChessRenderer chessRenderer;
-    private final SimpleAI ai; // Can be null for two-player mode
+    private final SimpleAI ai;
     private final boolean isTwoPlayerMode;
 
     private ChessPiece selectedPiece;
     private int fromFile, fromRank;
     private List<Point> legalMoves;
 
+    /**
+     * 
+     * @param gameState
+     * @param chessRenderer
+     * @param ai            can be null for two-player mode.
+     */
     public ChessRendererListeners(GameState gameState, ChessRenderer chessRenderer, SimpleAI ai) {
         this.gameState = gameState;
         this.chessRenderer = chessRenderer;
@@ -143,9 +149,11 @@ public class ChessRendererListeners implements MouseListener, MouseMotionListene
 
     private Point getSquareFromMouseEvent(MouseEvent e) {
         int squareLength = chessRenderer.getBoardSquareLength();
+        int xTranslate = (int) (chessRenderer.getChessRendererFrame().getSize().getWidth() - squareLength * 8) / 2;
+        int yTranslate = (int) (chessRenderer.getChessRendererFrame().getSize().getHeight() - squareLength * 8) / 2;
 
-        int file = (e.getX() - squareLength * 2) / squareLength;
-        int rank = (e.getY() - squareLength * 2) / squareLength;
+        int file = (e.getX() - xTranslate) / squareLength;
+        int rank = (e.getY() - yTranslate) / squareLength;
 
         if (file < 0 || file >= 8 || rank < 0 || rank >= 8) {
             return null;
