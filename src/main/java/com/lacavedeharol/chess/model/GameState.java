@@ -56,7 +56,7 @@ public class GameState {
         }
         // EN PASSANT: State Reset
         Point previousEnPassantTarget = enPassantTargetSquare;
-        System.out.print("Target square for enpassant: " + previousEnPassantTarget);
+
         // CAPTURE LOGIC (Handles Standard vs. En Passant)
         if (piece.getPieceType() == PieceType.PAWN &&
                 new Point(toFile, toRank).equals(previousEnPassantTarget)) {
@@ -64,12 +64,12 @@ public class GameState {
             System.out.println("En Passant capture detected." + " Target square: " + previousEnPassantTarget);
             int capturedPawnRank = fromRank;
             int capturedPawnFile = toFile;
-            System.out.println("Captured pawn at: (" + capturedPawnFile + ", " + capturedPawnRank + ")");
+
             ChessPiece capturedPawn = getPieceAt(capturedPawnFile, capturedPawnRank);
             if (capturedPawn != null) {
                 capturedPieces.add(capturedPawn);
                 chessPieces[capturedPawnFile][capturedPawnRank] = null;
-                System.out.println("En Passant capture executed: " + capturedPawn);
+
             }
         } else {
             // This is a standard capture.
@@ -108,7 +108,7 @@ public class GameState {
         enPassantTargetSquare = null;
         if (piece.getPieceType() == PieceType.PAWN && Math.abs(fromRank - toRank) == 2) {
             enPassantTargetSquare = new Point(toFile, (fromRank + toRank) / 2);
-            System.out.println("En Passant target square set to: " + enPassantTargetSquare);
+
         }
 
         boolean isPromotion = (piece.getPieceType() == PieceType.PAWN &&
@@ -298,7 +298,7 @@ public class GameState {
     private void initializePieces() {
         PieceType[] backRowOrder = {
                 PieceType.ROOK, PieceType.KNIGHT, PieceType.BISHOP,
-                PieceType.KING, PieceType.QUEEN, PieceType.BISHOP, PieceType.KNIGHT, PieceType.ROOK
+                PieceType.QUEEN, PieceType.KING, PieceType.BISHOP, PieceType.KNIGHT, PieceType.ROOK
         };
 
         for (int file = 0; file < 8; file++) {
