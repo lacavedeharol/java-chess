@@ -5,9 +5,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
-public class ArtUtils {
+public class RenderingUtilities {
 
-    private ArtUtils() {
+    private RenderingUtilities() {
     }
 
     public static Color dark, light, reddish, redder;

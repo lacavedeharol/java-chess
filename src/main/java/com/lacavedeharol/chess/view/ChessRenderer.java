@@ -26,27 +26,27 @@ public class ChessRenderer extends JPanel implements ComponentListener {
     private ChessPiece draggedPiece;
     private int draggedFile, draggedRank;
 
-    JFrame chessRendererFrame;
+    JFrame chessFrame;
 
     public ChessRenderer(GameState gameState) {
         this.gameState = gameState;
         this.chessBoard = new ChessBoard();
         this.borderPainter = new BorderPainter();
         this.legalMovePainter = new LegalMovePainter();
-        this.addComponentListener(this);
-        chessRendererFrame = new ChessRendererFrame(this);
+     //   this.addComponentListener(this);
+        chessFrame = new ChessFrame(this);
 
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2d = ArtUtils.preparePixelArtGraphics(g);
-        g2d.setColor(ArtUtils.dark);
+        Graphics2D g2d = RenderingUtilities.preparePixelArtGraphics(g);
+        g2d.setColor(RenderingUtilities.dark);
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
         // debug print
-        boolean grid = false;
+        boolean grid = true;
         if (grid) {
             g2d.setColor(Color.GREEN);
             int x = 0;
@@ -61,14 +61,15 @@ public class ChessRenderer extends JPanel implements ComponentListener {
             }
         }
         // end of debug print
-        g2d.translate((chessRendererFrame.getSize().getWidth() - boardSquareLength * 10) / 2,
-                (chessRendererFrame.getSize().getHeight() - boardSquareLength * 10) / 2);
-        borderPainter.draw(g2d, boardSquareLength);
-        g2d.translate(-(chessRendererFrame.getSize().getWidth() - boardSquareLength * 10) / 2,
-                -(chessRendererFrame.getSize().getHeight() - boardSquareLength * 10) / 2);
 
-        g2d.translate((chessRendererFrame.getSize().getWidth() - boardSquareLength * 8) / 2,
-                (chessRendererFrame.getSize().getHeight() - boardSquareLength * 8) / 2);
+        g2d.translate((chessFrame.getSize().getWidth() - boardSquareLength * 10) / 2,
+                (chessFrame.getSize().getHeight() - boardSquareLength * 10) / 2);
+        borderPainter.draw(g2d, boardSquareLength);
+        g2d.translate(-(chessFrame.getSize().getWidth() - boardSquareLength * 10) / 2,
+                -(chessFrame.getSize().getHeight() - boardSquareLength * 10) / 2);
+
+        g2d.translate((chessFrame.getSize().getWidth() - boardSquareLength * 8) / 2,
+                (chessFrame.getSize().getHeight() - boardSquareLength * 8) / 2);
 
         chessBoard.draw(g2d, boardSquareLength);
 
@@ -105,8 +106,8 @@ public class ChessRenderer extends JPanel implements ComponentListener {
                 }
             }
         }
-        g2d.translate(-(chessRendererFrame.getSize().getWidth() - boardSquareLength * 8) / 2,
-                -(chessRendererFrame.getSize().getHeight() - boardSquareLength * 8) / 2);
+        g2d.translate(-(chessFrame.getSize().getWidth() - boardSquareLength * 8) / 2,
+                -(chessFrame.getSize().getHeight() - boardSquareLength * 8) / 2);
     }
 
     private void drawPiece(Graphics2D g2d, ChessPiece piece) {
@@ -170,7 +171,7 @@ public class ChessRenderer extends JPanel implements ComponentListener {
 
     @Override
     public void componentResized(ComponentEvent e) {
-        boardSquareLength = Math.min(getWidth(), getHeight()) / 12;
+        boardSquareLength = Math.min(chessFrame.getSize().width, chessFrame.getSize().height) / 12;
         revalidate();
         repaint();
     }
@@ -187,20 +188,8 @@ public class ChessRenderer extends JPanel implements ComponentListener {
     public void componentHidden(ComponentEvent e) {
     }
 
-    private class ChessRendererFrame extends JFrame {
-        public ChessRendererFrame(JPanel mainPanel) {
-            add(mainPanel);
-            pack();
-            setMinimumSize(getPreferredSize());
-            setTitle("Java Chess");
-            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            setLocationRelativeTo(null);
-            setVisible(true);
-        }
-    }
-
-    public JFrame getChessRendererFrame() {
-        return chessRendererFrame;
+    public JFrame getChessFrame() {
+        return chessFrame;
     }
 
 }

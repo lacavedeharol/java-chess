@@ -149,8 +149,8 @@ public class ChessRendererListeners implements MouseListener, MouseMotionListene
 
     private Point getSquareFromMouseEvent(MouseEvent e) {
         int squareLength = chessRenderer.getBoardSquareLength();
-        int xTranslate = (int) (chessRenderer.getChessRendererFrame().getSize().getWidth() - squareLength * 8) / 2;
-        int yTranslate = (int) (chessRenderer.getChessRendererFrame().getSize().getHeight() - squareLength * 8) / 2;
+        int xTranslate = (int) (chessRenderer.getChessFrame().getSize().getWidth() - squareLength * 8) / 2;
+        int yTranslate = (int) (chessRenderer.getChessFrame().getSize().getHeight() - squareLength * 8) / 2;
 
         int file = (e.getX() - xTranslate) / squareLength;
         int rank = (e.getY() - yTranslate) / squareLength;

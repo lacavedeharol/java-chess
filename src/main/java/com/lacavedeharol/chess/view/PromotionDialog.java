@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 public class PromotionDialog extends JDialog implements ActionListener {
 
@@ -24,20 +23,15 @@ public class PromotionDialog extends JDialog implements ActionListener {
         super(parent, "Pawn Promotion", true);
         setUndecorated(false);
         setLayout(new GridLayout(1, 4, 0, 0));
-        getContentPane().setBackground(ArtUtils.light);
+        getContentPane().setBackground(RenderingUtilities.light);
 
         BufferedImage spriteSheet = ChessPiece.getPromotionIconsSpriteSheet();
         int spriteSize = 16;
         for (int i = 0; i < PieceType.values().length - 2; i++) {
-            ArrayList<Image> images = new ArrayList<>();
-            for (int j = 0; j < 3; j++) {
-                images.add(
-                        spriteSheet.getSubimage(i * spriteSize,
-                                isWhite ? j * spriteSize : j * spriteSize + (spriteSize * 3), spriteSize,
-                                spriteSize));
-            }
-            ChessButton button = new ChessButton(
-                    images.toArray(new Image[0]),
+
+            PromotionButton button = new PromotionButton(
+                    spriteSheet.getSubimage(i * spriteSize,
+                            isWhite ? 0 : spriteSize, spriteSize, spriteSize),
                     PieceType.values()[i + 1]);
             button.addActionListener(this);
             add(button);
@@ -60,7 +54,7 @@ public class PromotionDialog extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ChessButton button = (ChessButton) e.getSource();
+        PromotionButton button = (PromotionButton) e.getSource();
         selectedPiece = button.getPieceType();
         dispose();
     }

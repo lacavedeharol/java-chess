@@ -1,7 +1,6 @@
 package com.lacavedeharol.chess.model;
 
 import java.awt.Point;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import com.lacavedeharol.chess.model.validation.MoveValidationStrategy;
@@ -11,8 +10,6 @@ import com.lacavedeharol.chess.model.validation.MoveValidationStrategy;
  * core game logic.
  */
 public class GameState {
-
-    private GameRecorder gameRecorder;
 
     // Core State:
     private final ChessPiece[][] chessPieces;
@@ -24,7 +21,7 @@ public class GameState {
     private final MoveManager moveManager;
 
     public GameState() {
-        this.gameRecorder = new GameRecorder();
+
         this.chessPieces = new ChessPiece[8][8];
         this.capturedPieces = new ArrayList<>();
         this.isWhiteToMove = true;
@@ -33,6 +30,8 @@ public class GameState {
         this.isBlackKingInCheck = false;
         initializePieces();
     }
+
+    private Point previousEnPassantTarget;
 
     /**
      * Attempts to move a piece. This is the primary way to change the game
@@ -45,9 +44,6 @@ public class GameState {
      * @return true for a valid move, false otherwise.
      */
     public MoveResult movePiece(int fromFile, int fromRank, int toFile, int toRank) {
-        // EN PASSANT: State Reset
-        Point previousEnPassantTarget = enPassantTargetSquare;
-        enPassantTargetSquare = null;
 
         // Basic Validation.
         ChessPiece piece = getPieceAt(fromFile, fromRank);
@@ -58,31 +54,22 @@ public class GameState {
         if (!legalMoves.contains(new Point(toFile, toRank))) {
             return MoveResult.INVALID;
         }
-
-        // Track if this was a capture BEFORE making the move.
-        boolean wasCapture = false;
-        boolean wasEnPassant = false;
-
-        // Check for en passant capture.
-        if (piece.getPieceType() == PieceType.PAWN &&
-                new Point(toFile, toRank).equals(previousEnPassantTarget)) {
-            wasCapture = true;
-            wasEnPassant = true;
-        } else if (getPieceAt(toFile, toRank) != null) {
-            // Standard capture.
-            wasCapture = true;
-        }
-
+        // EN PASSANT: State Reset
+        Point previousEnPassantTarget = enPassantTargetSquare;
+        System.out.print("Target square for enpassant: " + previousEnPassantTarget);
         // CAPTURE LOGIC (Handles Standard vs. En Passant)
         if (piece.getPieceType() == PieceType.PAWN &&
                 new Point(toFile, toRank).equals(previousEnPassantTarget)) {
             // This is an en passant capture. The captured pawn is on a different square.
+            System.out.println("En Passant capture detected." + " Target square: " + previousEnPassantTarget);
             int capturedPawnRank = fromRank;
             int capturedPawnFile = toFile;
+            System.out.println("Captured pawn at: (" + capturedPawnFile + ", " + capturedPawnRank + ")");
             ChessPiece capturedPawn = getPieceAt(capturedPawnFile, capturedPawnRank);
             if (capturedPawn != null) {
                 capturedPieces.add(capturedPawn);
                 chessPieces[capturedPawnFile][capturedPawnRank] = null;
+                System.out.println("En Passant capture executed: " + capturedPawn);
             }
         } else {
             // This is a standard capture.
@@ -92,49 +79,44 @@ public class GameState {
             }
         }
 
-        // CASTLING LOGIC
-        boolean wasCastling = false;
-        if (piece.getPieceType() == PieceType.KING && Math.abs(toFile - fromFile) == 2) {
-            wasCastling = true;
-            if (toFile > fromFile) { // King-side
-                ChessPiece rook = getPieceAt(7, fromRank);
-                chessPieces[5][fromRank] = rook;
-                chessPieces[7][fromRank] = null;
-                rook.setPosition(5, fromRank);
-                rook.markAsMoved();
-            } else { // Queen-side
-                ChessPiece rook = getPieceAt(0, fromRank);
-                chessPieces[3][fromRank] = rook;
-                chessPieces[0][fromRank] = null;
-                rook.setPosition(3, fromRank);
-                rook.markAsMoved();
-            }
-        }
-
-        // PRIMARY PIECE MOVEMENT
+        // PRIMARY PIECE MOVEMENT, before Castling/Promotion logic.
         chessPieces[toFile][toRank] = piece;
         chessPieces[fromFile][fromRank] = null;
         piece.setPosition(toFile, toRank);
         piece.markAsMoved();
 
+        // CASTLING LOGIC
+        if (piece.getPieceType() == PieceType.KING && Math.abs(toFile - fromFile) == 2) {
+            if (toFile > fromFile) { // King-side
+                ChessPiece rook = getPieceAt(7, fromRank);
+                chessPieces[7][fromRank] = null;
+                chessPieces[5][fromRank] = rook;
+
+                rook.setPosition(5, fromRank);
+                rook.markAsMoved();
+            } else { // Queen-side
+                ChessPiece rook = getPieceAt(0, fromRank);
+                chessPieces[0][fromRank] = null;
+                chessPieces[3][fromRank] = rook;
+
+                rook.setPosition(3, fromRank);
+                rook.markAsMoved();
+            }
+        }
+
         // EN PASSANT: State Set for Next Turn
+        enPassantTargetSquare = null;
         if (piece.getPieceType() == PieceType.PAWN && Math.abs(fromRank - toRank) == 2) {
             enPassantTargetSquare = new Point(toFile, (fromRank + toRank) / 2);
+            System.out.println("En Passant target square set to: " + enPassantTargetSquare);
         }
 
         boolean isPromotion = (piece.getPieceType() == PieceType.PAWN &&
                 (toRank == 0 || toRank == 7));
         if (isPromotion) {
-            // Record the move before promotion (promotion will be recorded separately).
-            gameRecorder.recordMove(fromFile, fromRank, toFile, toRank, piece,
-                    wasCapture, wasEnPassant, wasCastling, this);
             // Don't switch turns yet! The controller needs to get the promotion choice.
             return MoveResult.PROMOTION_REQUIRED;
         }
-
-        // Record the successful move.
-        gameRecorder.recordMove(fromFile, fromRank, toFile, toRank, piece,
-                wasCapture, wasEnPassant, wasCastling, this);
 
         // FINAL STATE UPDATES: If the move is valid, change turn.
         isWhiteToMove = !isWhiteToMove;
@@ -195,9 +177,6 @@ public class GameState {
         ChessPiece promotedPiece = new ChessPiece(pawn.isWhite(), choice, file, rank);
         promotedPiece.markAsMoved();
         chessPieces[file][rank] = promotedPiece;
-
-        // Record the promotion.
-        gameRecorder.recordPromotion(choice);
 
         // Now that the move is fully complete, switch turns and update check status.
         isWhiteToMove = !isWhiteToMove;
@@ -369,45 +348,5 @@ public class GameState {
             }
         }
         return false;
-    }
-
-    // GameRecorder Integration Methods
-
-    /**
-     * Set player names for the game record.
-     * 
-     * @param whiteName
-     * @param blackName
-     */
-    public void setPlayerNames(String whiteName, String blackName) {
-        gameRecorder.setPlayerNames(whiteName, blackName);
-    }
-
-    /**
-     * Save the current game to a JSON file.
-     * 
-     * @param filepath
-     * @throws IOException
-     */
-    public void saveGame(String filepath) throws IOException {
-        gameRecorder.endGame(getGameStatus(), filepath);
-    }
-
-    /**
-     * Get the game data for inspection or manual saving.
-     * 
-     * @return
-     */
-    public ChessGameData getGameData() {
-        return gameRecorder.getGameData();
-    }
-
-    /**
-     * Get the game data as a JSON string.
-     * 
-     * @return
-     */
-    public String getGameAsJson() {
-        return gameRecorder.getGameData().toJson();
     }
 }
