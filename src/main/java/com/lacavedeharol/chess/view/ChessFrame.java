@@ -8,7 +8,6 @@ public class ChessFrame extends JFrame {
     public ChessFrame(JPanel mainPanel) {
         add(mainPanel);
         pack();
-        setMinimumSize(getSize());
         setTitle("Java Chess");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);

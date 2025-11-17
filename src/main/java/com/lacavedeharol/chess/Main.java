@@ -4,7 +4,7 @@ import javax.swing.SwingUtilities;
 
 import com.lacavedeharol.chess.controller.ChessRendererListeners;
 import com.lacavedeharol.chess.model.GameState;
-import com.lacavedeharol.chess.model.SimpleAI;
+import com.lacavedeharol.chess.model.ImprovedAI;
 import com.lacavedeharol.chess.view.ChessRenderer;
 
 public class Main {
@@ -15,8 +15,13 @@ public class Main {
             ChessRendererListeners controller;
             gameState = new GameState();
             chessRenderer = new ChessRenderer(gameState);
+            /**
+             * For single-player mode against AI, instantiate ImprovedAI and pass it to the
+             * controller.
+             * For two-player mode, pass null instead.
+             */
             controller = new ChessRendererListeners(gameState, chessRenderer,
-                    null);// new SimpleAI(false)
+                    new ImprovedAI(false));
             controller.startGame();
         });
     }

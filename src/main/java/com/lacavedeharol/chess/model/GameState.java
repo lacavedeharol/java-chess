@@ -31,8 +31,6 @@ public class GameState {
         initializePieces();
     }
 
-    private Point previousEnPassantTarget;
-
     /**
      * Attempts to move a piece. This is the primary way to change the game
      * state.

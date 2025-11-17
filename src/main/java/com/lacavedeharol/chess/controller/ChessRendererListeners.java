@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
-import com.lacavedeharol.chess.model.SimpleAI;
+import com.lacavedeharol.chess.model.ImprovedAI;
 import com.lacavedeharol.chess.model.ChessPiece;
 import com.lacavedeharol.chess.model.GameState;
 import com.lacavedeharol.chess.model.GameStatus;
@@ -29,7 +29,7 @@ public class ChessRendererListeners implements MouseListener, MouseMotionListene
 
     private final GameState gameState;
     private final ChessRenderer chessRenderer;
-    private final SimpleAI ai;
+    private final ImprovedAI ai;
     private final boolean isTwoPlayerMode;
 
     private ChessPiece selectedPiece;
@@ -42,7 +42,7 @@ public class ChessRendererListeners implements MouseListener, MouseMotionListene
      * @param chessRenderer
      * @param ai            can be null for two-player mode.
      */
-    public ChessRendererListeners(GameState gameState, ChessRenderer chessRenderer, SimpleAI ai) {
+    public ChessRendererListeners(GameState gameState, ChessRenderer chessRenderer, ImprovedAI ai) {
         this.gameState = gameState;
         this.chessRenderer = chessRenderer;
         this.ai = ai;

@@ -28,12 +28,15 @@ public class ChessRenderer extends JPanel implements ComponentListener {
 
     JFrame chessFrame;
 
+    private double widthTotal;
+    private double heightTotal;
+
     public ChessRenderer(GameState gameState) {
         this.gameState = gameState;
         this.chessBoard = new ChessBoard();
         this.borderPainter = new BorderPainter();
         this.legalMovePainter = new LegalMovePainter();
-     //   this.addComponentListener(this);
+        this.addComponentListener(this);
         chessFrame = new ChessFrame(this);
 
     }
@@ -46,7 +49,7 @@ public class ChessRenderer extends JPanel implements ComponentListener {
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
         // debug print
-        boolean grid = true;
+        boolean grid = false;
         if (grid) {
             g2d.setColor(Color.GREEN);
             int x = 0;
@@ -62,14 +65,15 @@ public class ChessRenderer extends JPanel implements ComponentListener {
         }
         // end of debug print
 
-        g2d.translate((chessFrame.getSize().getWidth() - boardSquareLength * 10) / 2,
-                (chessFrame.getSize().getHeight() - boardSquareLength * 10) / 2);
-        borderPainter.draw(g2d, boardSquareLength);
-        g2d.translate(-(chessFrame.getSize().getWidth() - boardSquareLength * 10) / 2,
-                -(chessFrame.getSize().getHeight() - boardSquareLength * 10) / 2);
+        widthTotal = chessFrame.getSize().getWidth();
+        heightTotal = chessFrame.getSize().getHeight();
 
-        g2d.translate((chessFrame.getSize().getWidth() - boardSquareLength * 8) / 2,
-                (chessFrame.getSize().getHeight() - boardSquareLength * 8) / 2);
+        g2d.translate((widthTotal - boardSquareLength * 10) / 2,
+                (heightTotal - boardSquareLength * 10) / 2);
+        borderPainter.draw(g2d, boardSquareLength);
+
+        g2d.translate(boardSquareLength,
+                boardSquareLength);
 
         chessBoard.draw(g2d, boardSquareLength);
 
@@ -106,8 +110,8 @@ public class ChessRenderer extends JPanel implements ComponentListener {
                 }
             }
         }
-        g2d.translate(-(chessFrame.getSize().getWidth() - boardSquareLength * 8) / 2,
-                -(chessFrame.getSize().getHeight() - boardSquareLength * 8) / 2);
+        g2d.translate(-boardSquareLength,
+                -boardSquareLength);
     }
 
     private void drawPiece(Graphics2D g2d, ChessPiece piece) {
@@ -171,7 +175,11 @@ public class ChessRenderer extends JPanel implements ComponentListener {
 
     @Override
     public void componentResized(ComponentEvent e) {
-        boardSquareLength = Math.min(chessFrame.getSize().width, chessFrame.getSize().height) / 12;
+
+        boardSquareLength = (boardSquareLength >= 16)
+                ? Math.min(chessFrame.getSize().width, chessFrame.getSize().height) / 12
+                : 16;
+
         revalidate();
         repaint();
     }
